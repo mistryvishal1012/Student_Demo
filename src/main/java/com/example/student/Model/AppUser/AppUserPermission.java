@@ -1,6 +1,6 @@
-package com.example.student.Security;
+package com.example.student.Model.AppUser;
 
- public enum ApplicationUserPermission {
+ public enum AppUserPermission {
     STUDENT_READ("student:read"),
     STUDENT_WRITE("student:write"),
     COURSE_READ("course:read"),
@@ -8,7 +8,7 @@ package com.example.student.Security;
 
     private final String permission;
 
-    ApplicationUserPermission(String permission) {
+    AppUserPermission(String permission) {
         this.permission = permission;
     }
 

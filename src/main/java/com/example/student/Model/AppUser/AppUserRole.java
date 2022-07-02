@@ -1,4 +1,4 @@
-package com.example.student.Security;
+package com.example.student.Model.AppUser;
 
 import com.google.common.collect.Sets;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -6,20 +6,20 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.example.student.Security.ApplicationUserPermission.*;
+import static com.example.student.Model.AppUser.AppUserPermission.*;
 
-public enum ApplicationUserRole {
+public enum AppUserRole {
     STUDENT(Sets.newHashSet()),
     ADMIN(Sets.newHashSet(COURSE_READ, COURSE_WRITE, STUDENT_READ, STUDENT_WRITE)),
     ADMINTRAINEE(Sets.newHashSet(COURSE_READ, STUDENT_READ));
 
-    private final Set<ApplicationUserPermission> permissions;
+    private final Set<AppUserPermission> permissions;
 
-    ApplicationUserRole(Set<ApplicationUserPermission> permissions) {
+    AppUserRole(Set<AppUserPermission> permissions) {
         this.permissions = permissions;
     }
 
-    public Set<ApplicationUserPermission> getPermissions() {
+    public Set<AppUserPermission> getPermissions() {
         return permissions;
     }
 
