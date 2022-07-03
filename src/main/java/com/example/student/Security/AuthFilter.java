@@ -34,49 +34,41 @@ public class AuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-
-        System.out.println("Request Auth...");
         HttpServletRequest httpRequest = (HttpServletRequest) httpServletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) httpServletResponse;
         Enumeration<String> headerNames = httpRequest.getHeaderNames();
         System.out.println(httpRequest.getServletPath());
         String token = httpRequest.getHeader("Bearer");
         if(httpRequest.getServletPath().equals("/api/v1/auth/login")){
-            System.out.println("Login");
             filterChain.doFilter(httpRequest,httpResponse);
         }else{
-            System.out.println("Not Login");
         if (token == null) {
-            System.out.println("Token Is Null");
             httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "Authorization token must be Bearer [token]");
             return;
         }else{
-            System.out.println("Token "+token);
-            try {
 
-                Jws<Claims> claimsJws = Jwts.parser()
-                        .setSigningKey("securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecure")
-                        .parseClaimsJws(token);
-                Claims body = claimsJws.getBody();
+                try {
 
-                String username = body.getSubject();
-                System.out.println(body);
-                List<Map<String, String>> authorities = (List<Map<String, String>>) body.get("Role");
+                    Jws<Claims> claimsJws = Jwts.parser()
+                            .setSigningKey("securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecure")
+                            .parseClaimsJws(token);
+                    Claims body = claimsJws.getBody();
 
-                Set<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities.stream()
-                        .map(m -> new SimpleGrantedAuthority(m.get("authority")))
-                        .collect(Collectors.toSet());
+                    String username = body.getSubject();
+                    List<Map<String, String>> authorities = (List<Map<String, String>>) body.get("Role");
 
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username,null,simpleGrantedAuthorities);
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                filterChain.doFilter(httpRequest,httpResponse);
-            }catch (Exception e) {
-                System.out.println(e);
-                System.out.println("Invalid");
-                httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "invalid/expired token");
-                return;
+                    Set<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities.stream()
+                            .map(m -> new SimpleGrantedAuthority(m.get("authority")))
+                            .collect(Collectors.toSet());
+
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username,null,simpleGrantedAuthorities);
+                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                    filterChain.doFilter(httpRequest,httpResponse);
+                }catch (Exception e) {
+                    httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "invalid/expired token");
+                    return;
+                }
             }
-        }
     }
     }
 }

@@ -40,7 +40,6 @@ public class RegistrationController {
     @PostMapping("/register")
     @Transactional
     public ResponseEntity<String> register(@RequestBody RegistrationRequest registrationRequest){
-        System.out.println("Sign Up");
         String  username = registrationRequest.getUsername();
         String password = registrationRequest.getPassword();
        try{
@@ -60,26 +59,23 @@ public class RegistrationController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody RegistrationRequest registrationRequest){
-        System.out.println("Sign In");
-
-        String  username = registrationRequest.getUsername();
-        String password = registrationRequest.getPassword();
-
         try{
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     registrationRequest.getUsername(), registrationRequest.getPassword()));
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("Login");
             String jws = Jwts.builder().setSubject(authentication.getName()).signWith(SignatureAlgorithm.HS256,"securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecure").claim("Role",authentication.getAuthorities()).compact();
-            System.out.println(jws);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add("Bearer",jws);
             return ResponseEntity.ok().headers(httpHeaders).body("Login");
-        }catch (RegistrationError exception){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
-        }catch(UsernameNotFoundException exception){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+        }catch (Exception ex){
+            switch (ex.getMessage()){
+                case "Bad credentials":
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Password");
+                case "No value present":
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Does Not Exists");
+                default:
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            }
         }
     }
 

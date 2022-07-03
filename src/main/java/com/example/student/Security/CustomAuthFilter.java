@@ -27,7 +27,6 @@ public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        System.out.println("Attempt Auth");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username,password);
@@ -36,11 +35,15 @@ public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        System.out.println("Succesfullly Auth");
         Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         System.out.println(key.getEncoded());
         String jws = Jwts.builder().setSubject(authResult.getName()).signWith(SignatureAlgorithm.HS256,"securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecure").claim("Role",authResult.getAuthorities()).compact();
         System.out.println(jws);
         response.addHeader("Bearer", jws);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        super.unsuccessfulAuthentication(request, response, failed);
     }
 }

@@ -32,11 +32,7 @@ public class RegistrationService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        System.out.println("Load User By UserName");
         Optional<AppUser> appUser = registrationRepository.findByUsername(s);
-        if(!appUser.isPresent()){
-            throw new UsernameNotFoundException("User Does Not Exixts");
-        }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         appUser.get().getAppUserRole().getGrantedAuthorities().forEach(authority -> {
             authorities.add(authority);
