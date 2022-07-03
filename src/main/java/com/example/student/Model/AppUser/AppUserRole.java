@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 import static com.example.student.Model.AppUser.AppUserPermission.*;
 
 public enum AppUserRole {
-    STUDENT(Sets.newHashSet()),
-    ADMIN(Sets.newHashSet(COURSE_READ, COURSE_WRITE, STUDENT_READ, STUDENT_WRITE)),
+    STUDENT(Sets.newHashSet(COURSE_READ,STUDENT_READ)),
+    ADMIN(Sets.newHashSet(COURSE_READ, COURSE_WRITE, STUDENT_READ, STUDENT_WRITE,CHANGE_ROLE)),
     ADMINTRAINEE(Sets.newHashSet(COURSE_READ, STUDENT_READ));
 
     private final Set<AppUserPermission> permissions;

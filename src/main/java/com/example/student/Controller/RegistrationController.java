@@ -2,6 +2,9 @@ package com.example.student.Controller;
 
 
 import com.example.student.Exception.RegistrationError;
+import com.example.student.Model.AppUser.AppUser;
+import com.example.student.Model.AppUser.AppUserRole;
+import com.example.student.Model.ChanegRole;
 import com.example.student.Model.RegistrationRequest;
 import com.example.student.Service.RegistrationService;
 import io.jsonwebtoken.Jwts;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -78,5 +82,6 @@ public class RegistrationController {
             }
         }
     }
+
 
 }

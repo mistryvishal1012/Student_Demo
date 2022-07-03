@@ -1,5 +1,6 @@
 package com.example.student.Service;
 
+import com.example.student.Exception.NotFoundException;
 import com.example.student.Exception.RegistrationError;
 import com.example.student.Model.AppUser.AppUser;
 import com.example.student.Model.AppUser.AppUserRole;
@@ -46,6 +47,14 @@ public class RegistrationService implements UserDetailsService{
         return appUser.isPresent() ? true : false;
     }
 
+    public AppUser findByUserID(long id) throws NotFoundException {
+        Optional<AppUser> appUser = registrationRepository.findById(id);
+        if(!appUser.isPresent()){
+            throw new NotFoundException("User Not Found");
+        }
+        return appUser.get();
+    }
+
     @Transactional
     public String registerUser(RegistrationRequest registrationRequest) {
         String  username = registrationRequest.getUsername();
@@ -82,5 +91,10 @@ public class RegistrationService implements UserDetailsService{
         }
 
         return "Login!!";
+    }
+
+    public String updateAppUser(AppUser appUser){
+        registrationRepository.saveAndFlush(appUser);
+        return "Done";
     }
 }

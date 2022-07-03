@@ -1,10 +1,15 @@
 package com.example.student.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
-@Entity
+@Entity(name = "student")
 @Table(name = "student")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Student implements Serializable {
 
 
@@ -12,6 +17,37 @@ public class Student implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long student_id;
     private String student_name;
+
+    private int student_graducation_year;
+
+    @ManyToMany
+    @JoinTable(name = "student_enrolled_course",
+    joinColumns = @JoinColumn(name = "student_id"),
+    inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @JsonIgnore
+    private List<Course> student_enrolled_courses;
+
+    public Student(String student_name, int student_graducation_year, List<Course> student_enrolled_courses) {
+        this.student_name = student_name;
+        this.student_graducation_year = student_graducation_year;
+        this.student_enrolled_courses = student_enrolled_courses;
+    }
+
+    public int getStudent_graducation_year() {
+        return student_graducation_year;
+    }
+
+    public void setStudent_graducation_year(int student_graducation_year) {
+        this.student_graducation_year = student_graducation_year;
+    }
+
+    public List<Course> getStudent_enrolled_courses() {
+        return student_enrolled_courses;
+    }
+
+    public void setStudent_enrolled_courses(List<Course> student_enrolled_courses) {
+        this.student_enrolled_courses = student_enrolled_courses;
+    }
 
     public Long getStudent_id() {
         return student_id;
@@ -34,6 +70,8 @@ public class Student implements Serializable {
         return "Student{" +
                 "student_id=" + student_id +
                 ", student_name='" + student_name + '\'' +
+                ", student_graducation_year=" + student_graducation_year +
+                ", student_enrolled_courses=" + student_enrolled_courses +
                 '}';
     }
 
@@ -41,8 +79,5 @@ public class Student implements Serializable {
     public Student() {
     }
 
-    public Student(String student_name) {
-        this.student_name = student_name;
-    }
 }
 

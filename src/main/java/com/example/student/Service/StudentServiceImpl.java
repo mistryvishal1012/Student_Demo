@@ -1,6 +1,7 @@
 package com.example.student.Service;
 
 import com.example.student.Exception.NotFoundException;
+import com.example.student.Model.Course;
 import com.example.student.Model.Student;
 import com.example.student.Repository.StudentRepository;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +17,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+
 
     @Override
     public List<Student> listAllStudents() {
@@ -63,7 +65,22 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Student addCourse(long id, Course course) {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if(optionalStudent.isPresent()){
+            Student student = optionalStudent.get();
+            student.getStudent_enrolled_courses().add(course);
+            return studentRepository.saveAndFlush(student);
+        }else{
+            System.out.println("No Found Student With ID : "+id);
+            throw new NotFoundException("Student with Id "+id+" Not Found");
+        }
+
+    }
+
+    @Override
     public Student addStudent(Student student) {
         return studentRepository.saveAndFlush(student);
     }
+
 }
