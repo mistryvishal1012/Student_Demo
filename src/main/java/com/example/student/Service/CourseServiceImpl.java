@@ -19,6 +19,9 @@ public class CourseServiceImpl implements CourseService{
     private CourseRepository courseRepository;
 
 
+    public boolean testConnection(){
+        return courseRepository.connectionJDBC();
+    }
     @Override
     public List<Course> listAllCourses() {
         return courseRepository.findAll();

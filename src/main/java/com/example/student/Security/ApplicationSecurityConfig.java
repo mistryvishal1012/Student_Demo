@@ -28,7 +28,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import static com.example.student.Model.AppUser.AppUserRole.*;
 
 @Configuration
-@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -41,7 +40,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http
+        /*http
                 .csrf().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -49,9 +48,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new CustomAuthFilter(authenticationManagerBean()),UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new AuthFilter(),UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/api/v*/auth/**").permitAll()
+
                 .anyRequest()
-                .authenticated();
+                .authenticated();*/
     }
 
     @Override

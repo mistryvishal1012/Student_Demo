@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping("api/v1/auth")
@@ -42,7 +41,6 @@ public class RegistrationController {
 
 
     @PostMapping("/register")
-    @Transactional
     public ResponseEntity<String> register(@RequestBody RegistrationRequest registrationRequest){
         String  username = registrationRequest.getUsername();
         String password = registrationRequest.getPassword();

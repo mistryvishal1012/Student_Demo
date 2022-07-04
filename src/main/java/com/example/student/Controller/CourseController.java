@@ -21,6 +21,12 @@ public class CourseController {
     @Autowired
     private CourseServiceImpl courseService;
 
+
+    @GetMapping(path = "/testConnection")
+    public ResponseEntity<Boolean> testConnection(){
+        return new ResponseEntity<Boolean>(courseService.testConnection(),HttpStatus.OK);
+    }
+
     @GetMapping
     @PreAuthorize("hasAnyAuthority('course:read')")
     public ResponseEntity<List<Course>> list(){
