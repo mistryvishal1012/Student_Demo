@@ -26,9 +26,9 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public Course getCourse(long id) {
-        Optional<Course> optionalCourse = courseRepository.findById(id);
-        if(optionalCourse.isPresent()){
-            return optionalCourse.get();
+        Course optionalCourse = courseRepository.findById(id);
+        if(optionalCourse instanceof Course){
+            return optionalCourse;
         }else{
             System.out.println("No Found Course With ID : "+id);
             throw new NotFoundException("Course with Id "+id+" Not Found");
@@ -42,9 +42,9 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public Course updateCourse(long id, Course course) {
-        Optional<Course> optionalCourse = courseRepository.findById(id);
-        if(optionalCourse.isPresent()){
-            Course courseToUpdate = optionalCourse.get();
+        Course optionalCourse = courseRepository.findById(id);
+        if(optionalCourse instanceof Course){
+            Course courseToUpdate = optionalCourse;
             BeanUtils.copyProperties(course,courseToUpdate,"course_id");
             return courseRepository.saveAndFlush(courseToUpdate);
         }else{
@@ -55,8 +55,8 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public String deleteCourse(long id) {
-        Optional<Course> optionalCourse = courseRepository.findById(id);
-        if(optionalCourse.isPresent()){
+        Course optionalCourse = courseRepository.findById(id);
+        if(optionalCourse instanceof Course){
             courseRepository.deleteById(id);
             return "Cousre With ID "+id+" Deleted Succesfully";
         }else{

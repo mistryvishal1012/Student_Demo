@@ -1,12 +1,29 @@
 package com.example.student.Repository;
 
+import com.example.student.DAO.RegestrationDAO;
 import com.example.student.Model.AppUser.AppUser;
-import com.example.student.Model.RegistrationRequest;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-public interface RegistrationRepository extends JpaRepository<AppUser,Long> {
+@Repository
+public class RegistrationRepository implements RegestrationDAO {
 
-    Optional<AppUser> findByUsername(String username);
+    @Override
+    public AppUser findByUsername(String username) {
+        return null;
+    }
+
+    @Override
+    public AppUser saveAndFlush(AppUser appUser) {
+        return null;
+    }
+
+    public AppUser findById(long id) {
+        return null;
+    }
+
+    public void save(AppUser appUser) {
+        return;
+    }
 }

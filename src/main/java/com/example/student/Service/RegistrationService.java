@@ -18,7 +18,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -27,39 +26,39 @@ import java.util.Optional;
 public class RegistrationService implements UserDetailsService{
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
     private RegistrationRepository registrationRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        Optional<AppUser> appUser = registrationRepository.findByUsername(s);
+        AppUser appUser = registrationRepository.findByUsername(s);
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        appUser.get().getAppUserRole().getGrantedAuthorities().forEach(authority -> {
+        appUser.getAppUserRole().getGrantedAuthorities().forEach(authority -> {
             authorities.add(authority);
         });
-        return new org.springframework.security.core.userdetails.User(appUser.get().getUsername(),appUser.get().getPassword(),authorities);
+        return new org.springframework.security.core.userdetails.User(appUser.getUsername(),appUser.getPassword(),authorities);
     }
 
 
     public Boolean findByUsername(String username) {
-        Optional<AppUser> appUser = registrationRepository.findByUsername(username);
-        return appUser.isPresent() ? true : false;
+        AppUser appUser = registrationRepository.findByUsername(username);
+        return appUser instanceof AppUser ? true : false;
     }
 
     public AppUser findByUserID(long id) throws NotFoundException {
-        Optional<AppUser> appUser = registrationRepository.findById(id);
-        if(!appUser.isPresent()){
+        AppUser appUser = registrationRepository.findById(id);
+        if(! (appUser instanceof AppUser)){
             throw new NotFoundException("User Not Found");
         }
-        return appUser.get();
+        return appUser;
     }
 
-    @Transactional
+
     public String registerUser(RegistrationRequest registrationRequest) {
         String  username = registrationRequest.getUsername();
         String password = registrationRequest.getPassword();
-        if(registrationRepository.findByUsername(username).isPresent()){
+        if(registrationRepository.findByUsername(username) instanceof AppUser){
             throw new RegistrationError("User Already Exists");
         }
 
@@ -81,12 +80,12 @@ public class RegistrationService implements UserDetailsService{
     public String loginUser(RegistrationRequest registrationRequest) {
         String  username = registrationRequest.getUsername();
         String password = registrationRequest.getPassword();
-        Optional<AppUser> currentUser = registrationRepository.findByUsername(username);
-        if(!currentUser.isPresent()){
+        AppUser currentUser = registrationRepository.findByUsername(username);
+        if(!(currentUser instanceof AppUser)){
             throw new RegistrationError("User Dose Not Exists");
         }
 
-        if(!passwordEncoder.matches(password,currentUser.get().getPassword())){
+        if(!passwordEncoder.matches(password,currentUser.getPassword())){
             throw new RegistrationError("Password is Invalid");
         }
 

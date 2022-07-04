@@ -4,20 +4,13 @@ package com.example.student.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.*;
 import java.util.List;
 
-@Entity(name = "course")
-@Table(name = "course")
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Course {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long course_id;
     private String course_name;
 
-    @ManyToMany(mappedBy = "student_enrolled_courses")
     private List<Student> student_enrolled_courses;
 
     public List<Student> getStudent_enrolled_courses() {

@@ -1,30 +1,17 @@
 package com.example.student.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-@Entity(name = "student")
-@Table(name = "student")
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+
 public class Student implements Serializable {
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long student_id;
     private String student_name;
 
     private int student_graducation_year;
 
-    @ManyToMany
-    @JoinTable(name = "student_enrolled_course",
-    joinColumns = @JoinColumn(name = "student_id"),
-    inverseJoinColumns = @JoinColumn(name = "course_id"))
-    @JsonIgnore
     private List<Course> student_enrolled_courses;
 
     public Student(String student_name, int student_graducation_year, List<Course> student_enrolled_courses) {

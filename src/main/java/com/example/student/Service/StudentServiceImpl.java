@@ -8,16 +8,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
+
     @Autowired
     private StudentRepository studentRepository;
-
 
     @Override
     public List<Student> listAllStudents() {
@@ -25,11 +24,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    @Transactional
     public String deleteStudnet(long id) {
         System.out.println(id);
-        Optional<Student> optionalStudent = studentRepository.findById(id);
-        if(optionalStudent.isPresent()){
+        Student optionalStudent = studentRepository.findById(id);
+        if(optionalStudent instanceof Student){
              studentRepository.deleteById(id);
              return "Student With ID :" + id +" Deleted Successfully";
         }else{
@@ -41,9 +39,9 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student updateStudent(long id,Student student) {
         System.out.println(id);
-        Optional<Student> optionalStudent = studentRepository.findById(id);
-        if(optionalStudent.isPresent()){
-            Student studentToUpdate = optionalStudent.get();
+        Student optionalStudent = studentRepository.findById(id);
+        if(optionalStudent instanceof Student){
+            Student studentToUpdate = optionalStudent;
             BeanUtils.copyProperties(student,studentToUpdate,"student_id");
             System.out.println(studentToUpdate);
             return studentRepository.saveAndFlush(studentToUpdate);
@@ -55,9 +53,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getStudent(long id) {
-        Optional<Student> optionalStudent = studentRepository.findById(id);
-        if(optionalStudent.isPresent()){
-            return optionalStudent.get();
+        Student optionalStudent = studentRepository.findById(id);
+        if(optionalStudent instanceof Student){
+            return optionalStudent;
         }else{
             System.out.println("No Found Student With ID : "+id);
             throw new NotFoundException("Student with Id "+id+" Not Found");
@@ -66,9 +64,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student addCourse(long id, Course course) {
-        Optional<Student> optionalStudent = studentRepository.findById(id);
-        if(optionalStudent.isPresent()){
-            Student student = optionalStudent.get();
+        Student optionalStudent = studentRepository.findById(id);
+        if(optionalStudent instanceof Student){
+            Student student = optionalStudent;
             student.getStudent_enrolled_courses().add(course);
             return studentRepository.saveAndFlush(student);
         }else{
